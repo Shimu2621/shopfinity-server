@@ -1,12 +1,12 @@
 {
   "name": "shopfinity-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Shopfinity backend server built with Node.js, Express, MongoDB, and TypeScript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app/server.js", 
-    "start": "node app/server.js"
+    "dev": "nodemon --exec ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "Shimu Ziasmin",
@@ -20,6 +20,11 @@
     "mongoose": "^8.19.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.9.1",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }
