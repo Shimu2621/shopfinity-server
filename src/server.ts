@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { connectDB } from "./config/db";
 import mongoose from "mongoose";
 
 dotenv.config();
@@ -12,15 +13,12 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Database connection
-// mongoose
-//   .connect(process.env.MONGO_URI as string)
-//   .then(() => console.log("✅ MongoDB connected successfully"))
-//   .catch((err) => console.error("❌ MongoDB connection failed:", err));
+// Connect to Database
+connectDB();
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to Shopfinity Backend with TypeScript!");
+  res.send("Welcome to Shopfinity Backend with TypeScript and MongoDB!");
 });
 
 // Start server
