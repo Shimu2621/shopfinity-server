@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
-import mongoose from "mongoose";
+import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 
@@ -13,12 +13,15 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+//Routes
+app.use("api/users", userRoutes);
+
 // Connect to Database
 connectDB();
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to Shopfinity Backend with TypeScript and MongoDB!");
+  res.send("Welcome to Shopfinity Server with TypeScript and MongoDB!");
 });
 
 // Start server

@@ -6,20 +6,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const db_1 = require("./config/db");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
 // Middleware
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-// Database connection
-// mongoose
-//   .connect(process.env.MONGO_URI as string)
-//   .then(() => console.log("✅ MongoDB connected successfully"))
-//   .catch((err) => console.error("❌ MongoDB connection failed:", err));
+// Connect to Database
+(0, db_1.connectDB)();
 // Routes
 app.get("/", (req, res) => {
-    res.send("Welcome to Shopfinity Backend with TypeScript!");
+    res.send("Welcome to Shopfinity Server with TypeScript and MongoDB!");
 });
 // Start server
 app.listen(PORT, () => {
