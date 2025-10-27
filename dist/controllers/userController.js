@@ -5,38 +5,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllUsers = exports.getProfile = exports.updateUser = exports.loginUser = exports.createUser = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = require("../models/userModel");
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-/*** ✅ Create new user (Signup) */
+const generateToken_1 = require("../utils/generateToken");
+/*** ✅ Create User (Signup) */
 const createUser = async (req, res) => {
     try {
-        const { name, email, password, avatarUrl, phone, address } = req.body;
-        // Check if user already exists
+        const { name, email, password, avatarUrl, phone, address, role } = req.body;
+        // Check if user exists
         const existingUser = await userModel_1.User.findOne({ email });
         if (existingUser) {
             res.status(400).json({ message: "User already exists" });
             return;
         }
         // Hash password
-        const hashedPassword = await bcrypt_1.default.hash(password, 10);
-        // Create user
-        const newUser = new userModel_1.User({
+        const hashedPassword = password
+            ? await bcrypt_1.default.hash(password, 10)
+            : undefined;
+        const user = new userModel_1.User({
             name,
             email,
             password: hashedPassword,
             avatarUrl,
             phone,
             address,
+            role: role || "user", // default to user
         });
-        await newUser.save();
+        await user.save();
+        const token = (0, generateToken_1.generateToken)(user._id.toString(), user.role || "user");
         res.status(201).json({
             message: "User created successfully",
+            token,
             user: {
-                id: newUser._id,
-                name: newUser.name,
-                email: newUser.email,
+                id: user._id.toString(),
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                avatarUrl: user.avatarUrl,
+                phone: user.phone,
+                address: user.address,
             },
         });
     }
@@ -45,31 +51,34 @@ const createUser = async (req, res) => {
     }
 };
 exports.createUser = createUser;
-/*** ✅ Login user */
+/*** ✅ Login User */
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        // Find user by email
-        const user = await userModel_1.User.findOne({ email });
+        const user = (await userModel_1.User.findOne({ email }));
         if (!user) {
             res.status(404).json({ message: "User not found" });
             return;
         }
-        // Check password
-        const isMatch = await bcrypt_1.default.compare(password, user.password);
+        const isMatch = password
+            ? await bcrypt_1.default.compare(password, user.password)
+            : false;
         if (!isMatch) {
             res.status(401).json({ message: "Invalid credentials" });
             return;
         }
-        // Generate JWT
-        const token = jsonwebtoken_1.default.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        const token = (0, generateToken_1.generateToken)(user._id.toString(), user.role || "user");
         res.status(200).json({
             message: "Login successful",
             token,
             user: {
-                id: user._id,
+                id: user._id.toString(),
                 name: user.name,
                 email: user.email,
+                role: user.role,
+                avatarUrl: user.avatarUrl,
+                phone: user.phone,
+                address: user.address,
             },
         });
     }
@@ -78,26 +87,32 @@ const loginUser = async (req, res) => {
     }
 };
 exports.loginUser = loginUser;
-/*** ✅ Update user profile */
+/*** ✅ Update User */
 const updateUser = async (req, res) => {
     try {
-        const userId = req.params.id;
-        const { name, avatarUrl, phone, address, password } = req.body;
-        const updateData = { name, avatarUrl, phone, address };
-        if (password) {
-            const hashedPassword = await bcrypt_1.default.hash(password, 10);
-            updateData.password = hashedPassword;
+        const { id } = req.params;
+        const updates = req.body;
+        if (updates.password) {
+            updates.password = await bcrypt_1.default.hash(updates.password, 10);
         }
-        const updatedUser = await userModel_1.User.findByIdAndUpdate(userId, updateData, {
+        const user = (await userModel_1.User.findByIdAndUpdate(id, updates, {
             new: true,
-        });
-        if (!updatedUser) {
+        }));
+        if (!user) {
             res.status(404).json({ message: "User not found" });
             return;
         }
         res.status(200).json({
             message: "User updated successfully",
-            user: updatedUser,
+            user: {
+                id: user._id.toString(),
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                avatarUrl: user.avatarUrl,
+                phone: user.phone,
+                address: user.address,
+            },
         });
     }
     catch (error) {
@@ -105,27 +120,46 @@ const updateUser = async (req, res) => {
     }
 };
 exports.updateUser = updateUser;
-/*** ✅ Get single user profile */
+/*** ✅ Get Profile */
 const getProfile = async (req, res) => {
     try {
-        const userId = req.params.id;
-        const user = await userModel_1.User.findById(userId).select("-password");
+        const { id } = req.params;
+        const user = (await userModel_1.User.findById(id));
         if (!user) {
             res.status(404).json({ message: "User not found" });
             return;
         }
-        res.status(200).json({ user });
+        res.status(200).json({
+            user: {
+                id: user._id.toString(),
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                avatarUrl: user.avatarUrl,
+                phone: user.phone,
+                address: user.address,
+            },
+        });
     }
     catch (error) {
-        res.status(500).json({ message: "Error fetching user profile", error });
+        res.status(500).json({ message: "Error fetching profile", error });
     }
 };
 exports.getProfile = getProfile;
-/*** ✅ Get all users (admin only) */
+/*** ✅ Get All Users (Admin Only) */
 const getAllUsers = async (_req, res) => {
     try {
-        const users = await userModel_1.User.find().select("-password");
-        res.status(200).json(users);
+        const users = await userModel_1.User.find();
+        const formattedUsers = users.map((user) => ({
+            id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            avatarUrl: user.avatarUrl,
+            phone: user.phone,
+            address: user.address,
+        }));
+        res.status(200).json({ users: formattedUsers });
     }
     catch (error) {
         res.status(500).json({ message: "Error fetching users", error });
