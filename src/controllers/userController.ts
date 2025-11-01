@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { User } from "../models/userModel";
-import { IUser } from "../types/userTypes";
+import { IUser } from "../interfaces/user.interface";
 import { generateToken } from "../utils/generateToken";
 import { Types } from "mongoose";
 
