@@ -5,6 +5,7 @@ import { connectDB } from "./config/db";
 import userRoutes from "./routes/userRoutes";
 import brandRoutes from "./routes/brandRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
+import productRoutes from "./routes/productRoute";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/products", productRoutes);
 
 // Connect to Database
 connectDB();
