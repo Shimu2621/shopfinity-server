@@ -35,12 +35,15 @@ export const createUser = async (
 
     await user.save();
 
-    const token = generateToken(user._id.toString(), user.role || "user");
+    const token = generateToken(
+      (user._id as Types.ObjectId).toString(),
+      user.role || "user"
+    );
 
     res.status(201).json({
       message: "User created successfully",
       user: {
-        id: user._id,
+        id: (user._id as Types.ObjectId).toString(),
         name: user.name,
         email: user.email,
         role: user.role,
@@ -74,13 +77,16 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const token = generateToken(user._id.toString(), user.role || "user");
+    const token = generateToken(
+      (user._id as Types.ObjectId).toString(),
+      user.role || "user"
+    );
 
     res.status(200).json({
       message: "Login successful",
       token,
       user: {
-        id: user._id.toString(),
+        id: (user._id as Types.ObjectId).toString(),
         name: user.name,
         email: user.email,
         role: user.role,
@@ -119,7 +125,7 @@ export const updateUser = async (
     res.status(200).json({
       message: "User updated successfully",
       user: {
-        id: user._id.toString(),
+        id: (user._id as Types.ObjectId).toString(),
         name: user.name,
         email: user.email,
         role: user.role,
@@ -149,7 +155,7 @@ export const getProfile = async (
 
     res.status(200).json({
       user: {
-        id: user._id.toString(),
+        id: (user._id as Types.ObjectId).toString(),
         name: user.name,
         email: user.email,
         role: user.role,
@@ -172,7 +178,7 @@ export const getAllUsers = async (
     const users = await User.find();
 
     const formattedUsers = users.map((user) => ({
-      id: user._id.toString(),
+      id: (user._id as Types.ObjectId).toString(),
       name: user.name,
       email: user.email,
       role: user.role,

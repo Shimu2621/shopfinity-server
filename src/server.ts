@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import userRoutes from "./routes/userRoutes";
+import brandRoutes from "./routes/brandRoutes";
+import categoryRoutes from "./routes/categoryRoutes";
 
 dotenv.config();
 
@@ -15,6 +17,8 @@ app.use(express.json());
 
 //Routes
 app.use("/api/users", userRoutes);
+app.use("/api/brands", brandRoutes);
+app.use("/api/category", categoryRoutes);
 
 // Connect to Database
 connectDB();
