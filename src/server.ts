@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
+import { errorHandler } from "./middleware/errorHandler";
 import userRoutes from "./routes/userRoutes";
 import brandRoutes from "./routes/brandRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
@@ -22,13 +23,15 @@ app.use("/api/brands", brandRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 
-// Connect to Database
-connectDB();
-
-// Routes
+// Welcome Route
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Shopfinity Server with TypeScript and MongoDB!");
 });
+
+app.use(errorHandler);
+
+// Connect to Database
+connectDB();
 
 // Start server
 app.listen(PORT, () => {
