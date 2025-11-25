@@ -26,3 +26,5 @@ const categorySchema = new Schema<CategoryDocument>(
 
 export const Category: Model<CategoryDocument> =
   mongoose.model<CategoryDocument>("Category", categorySchema);
+
+// Category: Headphone, TV, Cameras, Mobile, Action Camera, Tablets, Gaming Console, Accessories, Watch, Books, Fashion
