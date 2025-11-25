@@ -5,7 +5,7 @@ export const createCategorySchema = z.object({
   body: z.object({
     name: z.string().min(1, "Name is required"),
     icon: z.string().optional(),
-    slug: z.string(),
+    slug: z.string().optional(),
     description: z.string().optional(),
     parentId: z
       .string()
