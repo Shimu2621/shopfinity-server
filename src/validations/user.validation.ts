@@ -7,6 +7,16 @@ export const registerSchema = z.object({
     password: z.string().min(6, "Password must be at least 6 characters"),
     phone: z.string().optional(),
     address: z.string().optional(),
+    avatarUrl: z.string().url().optional(),
+  }),
+});
+
+export const updateUserSchema = z.object({
+  body: z.object({
+    name: z.string().optional(),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+    avatarUrl: z.string().url().optional(),
   }),
 });
 

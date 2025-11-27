@@ -7,7 +7,7 @@ export const createBrand = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { name, categoryId } = req.body;
+    const { name, categoryIds } = req.body;
 
     if (!name) {
       res.status(400).json({ message: "Brand name is required" });
@@ -20,7 +20,7 @@ export const createBrand = async (
       return;
     }
 
-    const newBrand = await Brand.create({ name, categoryId });
+    const newBrand = await Brand.create({ name, categoryIds });
     res.status(201).json({
       message: "Brand created successfully",
       data: newBrand,
@@ -36,7 +36,7 @@ export const getAllBrands = async (
   res: Response
 ): Promise<void> => {
   try {
-    const brands = await Brand.find().populate("categoryId", "name");
+    const brands = await Brand.find().populate("categoryIds", "name");
     res.status(200).json({ message: "All brands retrieved", data: brands });
   } catch (error: any) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -50,7 +50,7 @@ export const getSingleBrand = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const brand = await Brand.findById(id).populate("categoryId", "name");
+    const brand = await Brand.findById(id).populate("categoryIds", "name");
 
     if (!brand) {
       res.status(404).json({ message: "Brand not found" });
@@ -72,11 +72,11 @@ export const updateBrand = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, categoryId } = req.body;
+    const { name, categoryIds } = req.body;
 
     const updatedBrand = await Brand.findByIdAndUpdate(
       id,
-      { name, categoryId },
+      { name, categoryIds },
       { new: true, runValidators: true }
     );
 
