@@ -8,10 +8,12 @@ import {
 } from "../controllers/categoryController";
 import validate from "../middleware/validateResource";
 
-import { createCategorySchema } from "../validations/category.validation";
-import { updateCategorySchema } from "../validations/category.validation";
-import { deleteCategorySchema } from "../validations/category.validation";
-import { getSingleCategorySchema } from "../validations/category.validation";
+import {
+  createCategorySchema,
+  updateCategorySchema,
+  deleteCategorySchema,
+  getSingleCategorySchema,
+} from "../validations/category.validation";
 
 const router = express.Router();
 

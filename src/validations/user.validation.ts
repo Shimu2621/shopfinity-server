@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const registerSchema = z.object({
+export const createUserSchema = z.object({
   body: z.object({
     name: z.string().min(1, "Name is required"),
     email: z.string().email("Invalid email address"),
@@ -8,6 +8,7 @@ export const registerSchema = z.object({
     phone: z.string().optional(),
     address: z.string().optional(),
     avatarUrl: z.string().url().optional(),
+    role: z.enum(["user", "admin"]).optional(),
   }),
 });
 

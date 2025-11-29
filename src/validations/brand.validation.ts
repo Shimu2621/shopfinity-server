@@ -9,9 +9,6 @@ export const createBrandSchema = z.object({
 });
 
 export const updateBrandSchema = z.object({
-  params: z.object({
-    id: z.string(),
-  }),
   body: z.object({
     name: z.string().optional(),
     categoryIds: z.array(z.string()).optional(),

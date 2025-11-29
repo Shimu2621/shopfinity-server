@@ -6,15 +6,26 @@ import {
   getProfile,
   getAllUsers,
 } from "../controllers/userController";
+import validate from "../middleware/validateResource";
 import { authMiddleware, authorizeRoles } from "../middleware/authMiddleware";
+import {
+  createUserSchema,
+  loginSchema,
+  updateUserSchema,
+} from "../validations/user.validation";
 const router = express.Router();
 
 // Public routes
-router.post("/signup", createUser);
-router.post("/signin", loginUser);
+router.post("/signup", validate(createUserSchema), createUser);
+router.post("/signin", validate(loginSchema), loginUser);
 
 // Protected routes
-router.put("/update/:id", authMiddleware, updateUser);
+router.put(
+  "/update/:id",
+  validate(updateUserSchema),
+  authMiddleware,
+  updateUser
+);
 router.get("/profile/:id", authMiddleware, getProfile);
 
 // Admin-only route
