@@ -42,15 +42,3 @@ export const updateProductSchema = z.object({
     })
     .strict(),
 });
-
-export const getSingleProductSchema = z.object({
-  params: z.object({
-    id: z.string(),
-  }),
-});
-
-export const deleteProductSchema = z.object({
-  params: z.object({
-    id: z.string(),
-  }),
-});

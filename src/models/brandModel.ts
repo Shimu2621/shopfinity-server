@@ -6,11 +6,14 @@ export interface BrandDocument extends IBrand, Document {}
 const brandSchema = new Schema<BrandDocument>(
   {
     name: { type: String, required: true, trim: true, unique: true },
-    categoryIds: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      default: null,
-    },
+
+    // ✔ Array of ObjectId
+    categoryIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
   },
   { timestamps: true }
 );
