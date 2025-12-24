@@ -9,6 +9,7 @@ import categoryRoutes from "./routes/categoryRoutes";
 import productRoutes from "./routes/productRoute";
 import reviewRoutes from "./routes/reviewRoute";
 import orderRoutes from "./routes/orderRoutes";
+import productQuestionRoutes from "./routes/productQuestionRoutes";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/product-questions", productQuestionRoutes);
 
 // Welcome Route
 app.get("/", (req: Request, res: Response) => {
