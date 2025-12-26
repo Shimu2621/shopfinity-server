@@ -5,3 +5,7 @@ export const productSpecificationSchema = z.object({
   value: z.string().min(1, "Value is required"),
   productId: z.string().min(1, "Product ID is required"),
 });
+
+export const productSpecificationBulkSchema = z.array(
+  productSpecificationSchema
+);

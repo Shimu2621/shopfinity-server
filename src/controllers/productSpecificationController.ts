@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ProductSpecificationModel } from "../models/productSpecificationModel";
 import { productSpecificationSchema } from "../validations/productSpecification.validation";
+import { productSpecificationBulkSchema } from "../validations/productSpecification.validation";
 import { Types } from "mongoose";
 
 // Create a product specification
@@ -14,6 +15,30 @@ export const createProductSpecification = async (
     res.status(201).json(newSpec);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+export const createProductSpecificationsBulk = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const validatedData = productSpecificationBulkSchema.parse(req.body);
+
+    const specifications = await ProductSpecificationModel.insertMany(
+      validatedData
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Product specifications created successfully",
+      data: specifications,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 

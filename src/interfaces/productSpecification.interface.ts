@@ -1,5 +1,7 @@
+import { Types } from "mongoose";
+
 export interface IProductSpecification {
   key: string;
   value: string;
-  productId: string;
+  productId: Types.ObjectId;
 }

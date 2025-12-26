@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createProductSpecification,
+  createProductSpecificationsBulk,
   getProductSpecifications,
   getProductSpecification,
   updateProductSpecification,
@@ -10,6 +11,8 @@ import {
 const router = Router();
 
 router.post("/", createProductSpecification);
+// ✅ bulk create
+router.post("/bulk", createProductSpecificationsBulk);
 router.get("/", getProductSpecifications);
 router.get("/:id", getProductSpecification);
 router.put("/:id", updateProductSpecification);
