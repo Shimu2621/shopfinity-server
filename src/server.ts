@@ -15,6 +15,7 @@ import productSpecificationRoutes from "./routes/productSpecificationRoutes";
 import cartRoutes from "./routes/cartRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
 import filterOptionRoutes from "./routes/filterOptionRoutes";
+import wishlistRoutes from "./routes/wishlistRoutes";
 
 dotenv.config();
 
@@ -37,7 +38,8 @@ app.use("/api/product-answers", productAnswerRoutes);
 app.use("/api/product-specifications", productSpecificationRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/payment", paymentRoutes);
-app.use("/api/filterOption", filterOptionRoutes);
+app.use("/api/filter-option", filterOptionRoutes);
+app.use("/api/wishlist", wishlistRoutes);
 
 // Welcome Route
 app.get("/", (req: Request, res: Response) => {
