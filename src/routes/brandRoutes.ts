@@ -16,7 +16,7 @@ import {
 
 const router = express.Router();
 
-router.post("/create-brand", validate(createBrandSchema), createBrand); // ➕ Create
+router.post("/", validate(createBrandSchema), createBrand); // ➕ Create
 router.get("/", getAllBrands); // 📜 Get all
 router.get("/:id", validate(getSingleBrandSchema), getSingleBrand); // 🔍 Get single
 router.put("/:id", validate(updateBrandSchema), updateBrand); // ✏️ Update

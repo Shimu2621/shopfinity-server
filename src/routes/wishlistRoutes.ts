@@ -9,7 +9,7 @@ import {
 const router = Router();
 
 router.post("/", createWishlist);
-router.get("/all", getAllWishlist); // admin
+router.get("/", getAllWishlist); // admin
 router.get("/", getWishlist); // user
 router.delete("/:userId/:productId", deleteWishlistItem);
 

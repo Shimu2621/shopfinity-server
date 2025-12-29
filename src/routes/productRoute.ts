@@ -14,10 +14,10 @@ import {
 
 const router = express.Router();
 
-router.post("/create-product", validate(createProductSchema), createProduct);
+router.post("/", validate(createProductSchema), createProduct);
 router.get("/", getAllProducts);
-router.get("/product/:id", getSingleProduct);
-router.put("/product/:id", validate(updateProductSchema), updateProduct);
-router.delete("/product/:id", deleteProduct);
+router.get("/:id", getSingleProduct);
+router.put("/:id", validate(updateProductSchema), updateProduct);
+router.delete("/:id", deleteProduct);
 
 export default router;

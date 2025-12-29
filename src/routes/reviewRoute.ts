@@ -17,7 +17,7 @@ import {
 const router = express.Router();
 
 // CREATE
-router.post("/create-review", validate(createReviewSchema), createReview);
+router.post("/", validate(createReviewSchema), createReview);
 
 // GET ALL
 router.get("/", getAllReviews);
