@@ -5,6 +5,7 @@ import {
   getSingleProduct,
   updateProduct,
   deleteProduct,
+  getFeaturedCategoryProducts,
 } from "../controllers/productController";
 import validate from "../middleware/validateResource";
 import {
@@ -16,6 +17,7 @@ const router = express.Router();
 
 router.post("/", validate(createProductSchema), createProduct);
 router.get("/", getAllProducts);
+router.get("/featured-categories", getFeaturedCategoryProducts);
 router.get("/:id", getSingleProduct);
 router.put("/:id", validate(updateProductSchema), updateProduct);
 router.delete("/:id", deleteProduct);
