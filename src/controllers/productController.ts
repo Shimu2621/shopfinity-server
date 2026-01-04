@@ -12,7 +12,6 @@ export const createProduct = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ Get All Products
 // ✅ Get All Products (with pagination)
 export const getAllProducts = async (
   req: Request<{}, {}, {}, IProductQuery>,
