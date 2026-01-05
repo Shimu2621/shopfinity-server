@@ -52,6 +52,28 @@ export const getProductSpecifications = async (req: Request, res: Response) => {
   }
 };
 
+// Get product specification by productID
+export const getSpecificationsByProductId = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { productId } = req.params;
+
+    if (!Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({ error: "Invalid product ID" });
+    }
+
+    const specs = await ProductSpecificationModel.find({
+      productId,
+    });
+
+    res.status(200).json(specs);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Get a single product specification by ID
 export const getProductSpecification = async (req: Request, res: Response) => {
   try {

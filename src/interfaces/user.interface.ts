@@ -17,3 +17,9 @@ export interface IUser extends Document {
   role?: "user" | "admin";
   createdAt: Date;
 }
+
+export type IUserQuery = {
+  page?: string;
+  limit?: string;
+  searchTerm?: string;
+};
