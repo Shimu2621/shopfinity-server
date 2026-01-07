@@ -13,6 +13,13 @@ export const createUser = async (
   try {
     const { name, email, password, role } = req.body;
 
+    if (!name || !email || !password) {
+      res
+        .status(400)
+        .json({ message: "Name, email and password are required" });
+      return;
+    }
+
     // Check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -21,9 +28,7 @@ export const createUser = async (
     }
 
     // Hash password
-    const hashedPassword = password
-      ? await bcrypt.hash(password, 10)
-      : undefined;
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
       name,
