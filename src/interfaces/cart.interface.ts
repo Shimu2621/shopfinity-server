@@ -5,3 +5,9 @@ export interface ICart {
   productId: Types.ObjectId;
   quantity: number;
 }
+export type ICartQuery = {
+  page?: string;
+  limit?: string;
+  searchTerm?: string;
+  userId?: string;
+};
