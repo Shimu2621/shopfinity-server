@@ -24,3 +24,11 @@ export type IProductQuery = {
   isDiscountActive?: "true" | "false";
   [key: string]: string | undefined;
 };
+
+export interface IProductWithCategoryBrand {
+  categoryId?: any;
+  brandId?: any;
+  category?: any; // optional, will be added dynamically
+  brand?: any; // optional, will be added dynamically
+  [key: string]: any; // allow other fields
+}

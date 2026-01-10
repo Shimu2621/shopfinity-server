@@ -9,8 +9,9 @@ import {
 const router = Router();
 
 router.post("/", createWishlist);
-router.get("/", getAllWishlist); // admin
-router.get("/", getWishlist); // user
+
+router.get("/user", getWishlist); // user wishlist
+router.get("/admin", getAllWishlist); // admin wishlist
 router.delete("/:userId/:productId", deleteWishlistItem);
 
 export default router;

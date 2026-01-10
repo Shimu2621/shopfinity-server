@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { ProductModel } from "../models/productModel";
-import { IProductQuery } from "../interfaces/product.interface";
+import {
+  IProductQuery,
+  IProductWithCategoryBrand,
+} from "../interfaces/product.interface";
 
 // ✅ Create Product
 export const createProduct = async (req: Request, res: Response) => {
@@ -46,9 +49,21 @@ export const getAllProducts = async (
       .limit(limitNumber)
       .skip(skip);
 
+    // ✅ Map categoryId and brandId to category and brand in plain JS objects
+    const mappedProducts = (products as IProductWithCategoryBrand[]).map(
+      (p) => {
+        const obj = p.toObject();
+        obj.category = obj.categoryId;
+        obj.brand = obj.brandId;
+        delete obj.categoryId;
+        delete obj.brandId;
+        return obj;
+      }
+    );
+
     res.status(200).json({
       success: true,
-      products,
+      products: mappedProducts,
       total,
       page: pageNumber,
       limit: limitNumber,
@@ -89,9 +104,17 @@ export const getFeaturedCategoryProducts = async (
       { path: "brandId", select: "name" },
     ]);
 
+    // Map to add `category` and `brand` fields
+    const mappedProducts = products.map((p) => {
+      const obj = (p as any).toObject ? (p as any).toObject() : p;
+      obj.category = obj.categoryId;
+      obj.brand = obj.brandId;
+      return obj;
+    });
+
     res.status(200).json({
       success: true,
-      products,
+      products: mappedProducts,
     });
   } catch (error) {
     res.status(500).json({
