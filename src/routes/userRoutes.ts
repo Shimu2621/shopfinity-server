@@ -6,6 +6,7 @@ import {
   getProfile,
   getAllUsers,
   deleteUser,
+  getMe,
 } from "../controllers/userController";
 import validate from "../middleware/validateResource";
 import { authMiddleware, authorizeRoles } from "../middleware/authMiddleware";
@@ -31,6 +32,8 @@ router.get("/profile/:id", authMiddleware, getProfile);
 
 // Admin-only route
 router.get("/all", authMiddleware, authorizeRoles("admin"), getAllUsers);
+router.get("/me", authMiddleware, getMe);
+
 router.delete(
   "/delete/:id",
   authMiddleware,

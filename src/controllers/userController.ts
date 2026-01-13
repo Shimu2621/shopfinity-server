@@ -4,6 +4,7 @@ import { User } from "../models/userModel";
 import { IUser } from "../interfaces/user.interface";
 import { generateToken } from "../utils/generateToken";
 import { Types } from "mongoose";
+import { AuthRequest } from "../middleware/authMiddleware";
 
 /*** ✅ Create User (Signup) */
 export const createUser = async (
@@ -102,6 +103,35 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (error) {
     res.status(500).json({ message: "Error logging in", error });
+  }
+};
+
+/*** ✅ GetMe User */
+export const getMe = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user || !("id" in req.user)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = await User.findById(req.user.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      user: {
+        id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatarUrl: user.avatarUrl,
+        phone: user.phone,
+        address: user.address,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch user" });
   }
 };
 

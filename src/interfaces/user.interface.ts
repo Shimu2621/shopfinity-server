@@ -1,4 +1,4 @@
-import { Document, Types } from "mongoose";
+import { Types } from "mongoose";
 
 /**
  * User Type Definition
@@ -6,8 +6,8 @@ import { Document, Types } from "mongoose";
  * - Role-based access: "user" | "admin"
  */
 
-export interface IUser extends Document {
-  id: string;
+export interface IUser {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   password?: string; // optional for profile updates

@@ -4,12 +4,15 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Extend Express Request type to include `user`
-export interface AuthRequest extends Request {
-  user?: JwtPayload | string;
+interface AuthUser {
+  id: string;
+  role?: string;
 }
 
-// ✅ Authenticate user
+export interface AuthRequest extends Request {
+  user?: AuthUser;
+}
+
 export const authMiddleware = (
   req: AuthRequest,
   res: Response,
@@ -17,7 +20,6 @@ export const authMiddleware = (
 ): void => {
   try {
     const authHeader = req.headers.authorization;
-    console.log("Authorization Header:", req.headers.authorization);
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       res
@@ -27,23 +29,27 @@ export const authMiddleware = (
     }
 
     const token = authHeader.split(" ")[1];
+
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
 
-    req.user = decoded;
+    req.user = {
+      id: decoded.id || decoded._id,
+      role: decoded.role,
+    };
+
     next();
   } catch (error) {
-    res.status(401).json({ message: "Invalid or expired token", error });
+    res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
 // ✅ Role-based authorization
 export const authorizeRoles = (...roles: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
-    const user = req.user as JwtPayload;
-    if (!user || !roles.includes(user.role)) {
+    if (!req.user || !req.user.role || !roles.includes(req.user.role)) {
       res
         .status(403)
         .json({ message: "Access denied: insufficient permissions" });
