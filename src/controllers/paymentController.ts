@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import { PaymentModel } from "../models/paymentModel";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 /**
  * ➕ Create Payment
@@ -30,6 +33,41 @@ export const createPayment = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * 🛒 Create Stripe Checkout Session
+ */
+export const createStripeSession = async (req: Request, res: Response) => {
+  try {
+    const { paymentId } = req.body;
+
+    const payment = await PaymentModel.findById(paymentId).populate("orderId");
+    if (!payment) return res.status(404).json({ message: "Payment not found" });
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `Order #${payment.orderId._id}`,
+            },
+            unit_amount: Math.round(payment.amount * 100), // in cents
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: `http://localhost:3000/payment-success?paymentId=${payment._id}`,
+      cancel_url: `http://localhost:3000/payment-cancel?paymentId=${payment._id}`,
+    });
+
+    res.status(200).json({ id: session.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to create Stripe session", error });
+  }
+};
 /**
  * ✅ Payment Success
  */
