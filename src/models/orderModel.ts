@@ -5,7 +5,7 @@ export interface OrderDocument extends IOrder, Document {}
 
 const orderItemSchemaMongo = new Schema(
   {
-    productId: { type: String, required: true },
+    productId: { type: Schema.Types.ObjectId, ref: "Product", required: true }, // ✅ change here
     quantity: { type: Number, required: true },
     price: { type: Number, required: true },
   },
@@ -14,7 +14,7 @@ const orderItemSchemaMongo = new Schema(
 
 const orderSchemaMongo = new Schema(
   {
-    userId: { type: String, required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true }, // optional: ref User
     items: [orderItemSchemaMongo],
     totalAmount: { type: Number, required: true },
     status: {

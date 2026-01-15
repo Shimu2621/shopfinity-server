@@ -7,3 +7,9 @@ export interface IPayment {
   paymentMethod: string;
   paymentStatus: string;
 }
+
+export type IPaymentQuery = {
+  page?: string;
+  limit?: string;
+  searchTerm?: string; // For searching by user email, name, or payment ID
+};

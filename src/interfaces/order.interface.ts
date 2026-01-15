@@ -13,3 +13,10 @@ export interface IOrder {
   updatedAt?: Date;
   orderItems: IOrderItem[];
 }
+
+export type IOrderQuery = {
+  page?: string;
+  limit?: string;
+  userId?: string;
+  searchTerm?: string;
+};

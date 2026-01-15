@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { OrderModel } from "../models/orderModel";
 import { orderSchema } from "../validations/order.validation";
+import { AuthRequest } from "../middleware/authMiddleware";
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
@@ -14,20 +15,44 @@ export const createOrder = async (req: Request, res: Response) => {
 
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
-    const orders = await OrderModel.find();
-    return res.status(200).json({ orders });
-  } catch (error: any) {
-    return res.status(500).json({ message: error.message });
+    const orders = await OrderModel.find()
+      .populate("items.productId", "name images price description") // ✅ populate
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ orders });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch orders" });
   }
 };
 
-export const getSingleOrder = async (req: Request, res: Response) => {
+export const getOrderById = async (req: Request, res: Response) => {
   try {
-    const order = await OrderModel.findById(req.params.id);
+    const order = await OrderModel.findById(req.params.id).populate(
+      "items.productId",
+      "name images price description"
+    ); // ✅ populate
+
     if (!order) return res.status(404).json({ message: "Order not found" });
-    return res.status(200).json({ order });
+
+    res.status(200).json({ order });
   } catch (error: any) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getMyOrders = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const orders = await OrderModel.find({ userId: req.user.id })
+      .populate("items.productId", "name images price description")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ orders });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch orders" });
   }
 };
 
