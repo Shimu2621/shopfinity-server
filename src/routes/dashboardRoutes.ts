@@ -7,19 +7,26 @@ import {
   getTopSellingProducts,
   getUserRegistrationTrend,
   getPaymentMethodDistribution,
+  getTopCategoriesBySales,
 } from "../controllers/dashboardController";
 import { authMiddleware } from "../middleware/authMiddleware";
-import { adminOnly } from "../middleware/dashboardMiddleware";
+import { dashboardMiddleware } from "../middleware/dashboardMiddleware";
 
 const router = Router();
 
-router.use(authMiddleware, adminOnly);
+router.use(authMiddleware, dashboardMiddleware);
 
-router.get("/summary", getDashboardSummary);
+router.get(
+  "/summary",
+  authMiddleware,
+  dashboardMiddleware,
+  getDashboardSummary,
+);
 router.get("/sales-over-time", getSalesOverTime);
 router.get("/order-status", getOrderStatusDistribution);
 router.get("/top-products", getTopSellingProducts);
 router.get("/user-trend", getUserRegistrationTrend);
+router.get("/top-categories", getTopCategoriesBySales);
 router.get("/payment-methods", getPaymentMethodDistribution);
 
 export default router;

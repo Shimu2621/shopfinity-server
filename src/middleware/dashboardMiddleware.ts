@@ -2,10 +2,10 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "./authMiddleware";
 
-export const adminOnly = (
+export const dashboardMiddleware = (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({

@@ -4,6 +4,7 @@ import { OrderModel } from "../models/orderModel";
 import { User } from "../models/userModel";
 import { ProductModel } from "../models/productModel";
 import { PaymentModel } from "../models/paymentModel";
+import { ProductQuestionModel } from "../models/productQuestionModel";
 
 /**
  * ✅ MAIN DASHBOARD SUMMARY
@@ -11,38 +12,64 @@ import { PaymentModel } from "../models/paymentModel";
  */
 export const getDashboardSummary = async (req: Request, res: Response) => {
   try {
-    const totalRevenue = await PaymentModel.aggregate([
-      { $match: { paymentStatus: "paid" } },
-      { $group: { _id: null, total: { $sum: "$amount" } } },
-    ]);
+    const now = new Date();
+    const last30Days = new Date();
+    last30Days.setDate(now.getDate() - 30);
 
-    const totalOrders = await OrderModel.countDocuments();
-    const pendingOrders = await OrderModel.countDocuments({
-      status: "pending",
-    });
-
-    const totalCustomers = await User.countDocuments({ role: "user" });
-    const totalProducts = await ProductModel.countDocuments();
-    const outOfStock = await ProductModel.countDocuments({ stock: 0 });
-
-    const newCustomers = await User.countDocuments({
-      role: "user",
-      createdAt: {
-        $gte: new Date(new Date().setDate(new Date().getDate() - 30)),
-      },
-    });
-
-    res.status(200).json({
-      revenue: totalRevenue[0]?.total || 0,
+    const [
+      revenueAgg,
       totalOrders,
-      pendingOrders,
       totalCustomers,
       totalProducts,
+      pendingOrders,
       outOfStock,
       newCustomers,
+      unansweredQuestions,
+    ] = await Promise.all([
+      // 1️⃣ Total Revenue
+      OrderModel.aggregate([
+        { $match: { status: "completed" } },
+        { $group: { _id: null, total: { $sum: "$totalAmount" } } },
+      ]),
+
+      // 2️⃣ Total Orders
+      OrderModel.countDocuments(),
+
+      // 3️⃣ Total Customers
+      User.countDocuments({ role: "user" }),
+
+      // 4️⃣ Total Products
+      ProductModel.countDocuments(),
+
+      // 5️⃣ Pending Orders
+      OrderModel.countDocuments({ status: "pending" }),
+
+      // 6️⃣ Out of Stock
+      ProductModel.countDocuments({ stock: { $lte: 0 } }),
+
+      // 7️⃣ New Customers (Last 30 Days)
+      User.countDocuments({
+        role: "user",
+        createdAt: { $gte: last30Days },
+      }),
+
+      // 8️⃣ Unanswered Questions
+      ProductQuestionModel.countDocuments({ isAnswered: false }),
+    ]);
+
+    res.status(200).json({
+      totalRevenue: revenueAgg[0]?.total || 0,
+      totalOrders,
+      totalCustomers,
+      totalProducts,
+      pendingOrders,
+      outOfStock,
+      newCustomers,
+      unansweredQuestions,
     });
   } catch (error) {
-    res.status(500).json({ message: "Failed to load dashboard summary" });
+    console.error("Dashboard Summary Error:", error);
+    res.status(500).json({ message: "Failed to load dashboard data" });
   }
 };
 
@@ -75,7 +102,7 @@ export const getSalesOverTime = async (_req: Request, res: Response) => {
  */
 export const getOrderStatusDistribution = async (
   _req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     const data = await OrderModel.aggregate([
@@ -136,7 +163,7 @@ export const getTopSellingProducts = async (_req: Request, res: Response) => {
  */
 export const getUserRegistrationTrend = async (
   _req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     const data = await User.aggregate([
@@ -159,11 +186,49 @@ export const getUserRegistrationTrend = async (
 };
 
 /**
+ * 🧩 TOP CATEGORIES BY SALES
+ */
+export const getTopCategoriesBySales = async (_req: Request, res: Response) => {
+  try {
+    const data = await OrderModel.aggregate([
+      { $unwind: "$items" },
+      {
+        $lookup: {
+          from: "products",
+          localField: "items.productId",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      { $unwind: "$product" },
+      {
+        $group: {
+          _id: "$product.category",
+          total: { $sum: "$items.quantity" },
+        },
+      },
+      { $sort: { total: -1 } },
+      { $limit: 5 },
+      {
+        $project: {
+          name: "$_id",
+          total: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(data);
+  } catch {
+    res.status(500).json({ message: "Failed to load top categories" });
+  }
+};
+
+/**
  * 💳 PAYMENT METHOD DISTRIBUTION
  */
 export const getPaymentMethodDistribution = async (
   _req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     const data = await PaymentModel.aggregate([
