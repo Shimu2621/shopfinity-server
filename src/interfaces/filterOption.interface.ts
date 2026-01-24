@@ -9,3 +9,10 @@ export interface IFilterOption {
   unit?: string;
   categoryId: Types.ObjectId;
 }
+
+export type IFilterOptionQuery = {
+  page?: string;
+  limit?: string;
+  searchTerm?: string;
+  categoryId?: string;
+};

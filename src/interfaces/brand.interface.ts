@@ -6,3 +6,9 @@ export interface IBrand {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export type IBrandQuery = {
+  page?: string;
+  limit?: string;
+  searchTerm?: string;
+};
