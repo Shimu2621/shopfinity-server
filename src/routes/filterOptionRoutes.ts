@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   createFilterOption,
-  getFilterOptions,
+  getFilterOptionsByCategory,
   getFilterOption,
   updateFilterOption,
   deleteFilterOption,
@@ -10,7 +10,7 @@ import {
 const router = Router();
 
 router.post("/", createFilterOption);
-router.get("/", getFilterOptions);
+router.get("/", getFilterOptionsByCategory);
 router.get("/:id", getFilterOption);
 router.patch("/:id", updateFilterOption);
 router.delete("/:id", deleteFilterOption);

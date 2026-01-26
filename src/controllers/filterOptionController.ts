@@ -23,36 +23,14 @@ export const createFilterOption = async (req: Request, res: Response) => {
 };
 
 /**
- * 📦 Get All Filter Options
- */
-export const getFilterOptions = async (_req: Request, res: Response) => {
-  try {
-    const filterOptions = await FilterOptionModel.find().populate("categoryId");
-
-    res.status(200).json({
-      success: true,
-      total: filterOptions.length,
-      data: filterOptions,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch filter options",
-      error,
-    });
-  }
-};
-
-/**
  * 📄 Get Single Filter Option
  */
 export const getFilterOption = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const filterOption = await FilterOptionModel.findById(id).populate(
-      "categoryId"
-    );
+    const filterOption =
+      await FilterOptionModel.findById(id).populate("categoryId");
 
     if (!filterOption) {
       return res.status(404).json({
@@ -70,6 +48,40 @@ export const getFilterOption = async (req: Request, res: Response) => {
       success: false,
       message: "Failed to fetch filter option",
       error,
+    });
+  }
+};
+
+// ✅ Get Filter Option By Category
+export const getFilterOptionsByCategory = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { categoryId } = req.query;
+
+    if (!categoryId) {
+      return res.status(400).json({
+        success: false,
+        message: "categoryId is required",
+      });
+    }
+
+    const filter: any = {};
+    if (categoryId) filter.categoryId = categoryId;
+
+    const filterOptions =
+      await FilterOptionModel.find(filter).populate("categoryId");
+
+    res.status(200).json({
+      success: true,
+      total: filterOptions.length,
+      data: filterOptions,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: (error as Error).message,
     });
   }
 };

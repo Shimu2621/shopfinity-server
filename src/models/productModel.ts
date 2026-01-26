@@ -18,10 +18,13 @@ const productSchema = new Schema<ProductDocument>(
     categoryId: { type: Schema.Types.ObjectId, ref: "Category" },
     brandId: { type: Schema.Types.ObjectId, ref: "Brand" },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
+
+// ✅ ADD THIS HERE
+productSchema.index({ categoryId: 1, brandId: 1 });
 
 export const ProductModel = mongoose.model<ProductDocument>(
   "Product",
-  productSchema
+  productSchema,
 );
