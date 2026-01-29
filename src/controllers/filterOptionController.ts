@@ -23,6 +23,22 @@ export const createFilterOption = async (req: Request, res: Response) => {
 };
 
 /**
+ * 📄 Get Filter Options
+ */
+export const getFilterOptions = async (req: Request, res: Response) => {
+  const { categoryId } = req.query;
+
+  const brands = await FilterOptionModel.find({ categoryId }).select(
+    "name _id",
+  );
+
+  res.json({
+    brands,
+    priceRange: [0, 5000],
+  });
+};
+
+/**
  * 📄 Get Single Filter Option
  */
 export const getFilterOption = async (req: Request, res: Response) => {

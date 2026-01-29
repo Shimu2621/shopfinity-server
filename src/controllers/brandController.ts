@@ -4,7 +4,7 @@ import { Brand } from "../models/brandModel";
 // ✅ Create a new brand
 export const createBrand = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { name, categoryIds } = req.body;
@@ -31,13 +31,21 @@ export const createBrand = async (
 };
 
 // ✅ Get all brands
-export const getAllBrands = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getAllBrands = async (req: Request, res: Response) => {
   try {
-    const brands = await Brand.find().populate("categoryIds", "name");
-    res.status(200).json({ message: "All brands retrieved", data: brands });
+    const { categoryId } = req.query;
+
+    const filter: any = {};
+    if (categoryId) {
+      filter.categoryIds = categoryId;
+    }
+
+    const brands = await Brand.find(filter);
+
+    res.status(200).json({
+      message: "Brands retrieved",
+      data: brands,
+    });
   } catch (error: any) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -46,7 +54,7 @@ export const getAllBrands = async (
 // ✅ Get single brand by ID
 export const getSingleBrand = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { id } = req.params;
@@ -68,7 +76,7 @@ export const getSingleBrand = async (
 // ✅ Update brand
 export const updateBrand = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { id } = req.params;
@@ -77,7 +85,7 @@ export const updateBrand = async (
     const updatedBrand = await Brand.findByIdAndUpdate(
       id,
       { name, categoryIds },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updatedBrand) {
@@ -96,7 +104,7 @@ export const updateBrand = async (
 // ✅ Delete brand
 export const deleteBrand = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { id } = req.params;
