@@ -35,6 +35,10 @@ export const getAllProductQuestions = async (req: Request, res: Response) => {
     const questions = await ProductQuestionModel.find()
       .populate("userId", "name email")
       .populate("productId", "name price")
+      .populate({
+        path: "answer", // make sure you have virtual or ref
+        model: "ProductAnswer",
+      })
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -97,7 +101,7 @@ export const updateProductQuestion = async (req: Request, res: Response) => {
     const updatedQuestion = await ProductQuestionModel.findByIdAndUpdate(
       req.params.id,
       { question },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedQuestion) {
@@ -127,7 +131,7 @@ export const updateProductQuestion = async (req: Request, res: Response) => {
 export const deleteProductQuestion = async (req: Request, res: Response) => {
   try {
     const deletedQuestion = await ProductQuestionModel.findByIdAndDelete(
-      req.params.id
+      req.params.id,
     );
 
     if (!deletedQuestion) {
