@@ -31,23 +31,39 @@ export const createBrand = async (
 };
 
 // ✅ Get all brands
+// GET ALL WITH PAGINATION + SEARCH
 export const getAllBrands = async (req: Request, res: Response) => {
   try {
-    const { categoryId } = req.query;
+    const { page = "1", limit = "10", searchTerm } = req.query;
+
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const skip = (pageNumber - 1) * limitNumber;
 
     const filter: any = {};
-    if (categoryId) {
-      filter.categoryIds = categoryId;
+
+    if (searchTerm) {
+      filter.name = { $regex: searchTerm, $options: "i" };
     }
 
-    const brands = await Brand.find(filter);
+    const total = await Brand.countDocuments(filter);
+
+    const brands = await Brand.find(filter)
+      .populate("categoryIds", "name")
+      .skip(skip)
+      .limit(limitNumber);
 
     res.status(200).json({
       message: "Brands retrieved",
       data: brands,
+      meta: {
+        total,
+        page: pageNumber,
+        limit: limitNumber,
+      },
     });
   } catch (error: any) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error" });
   }
 };
 

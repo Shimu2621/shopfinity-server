@@ -24,10 +24,26 @@ const productQuestionSchema = new Schema<IProductQuestion>(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
+
+/* ================================
+   🔥 VIRTUAL POPULATE (IMPORTANT)
+================================ */
+productQuestionSchema.virtual("answer", {
+  ref: "ProductAnswer",
+  localField: "_id",
+  foreignField: "questionId",
+  justOne: true,
+});
+
+/* ================================
+   🔥 Enable virtual fields
+================================ */
+productQuestionSchema.set("toObject", { virtuals: true });
+productQuestionSchema.set("toJSON", { virtuals: true });
 
 export const ProductQuestionModel = mongoose.model<IProductQuestion>(
   "ProductQuestion",
-  productQuestionSchema
+  productQuestionSchema,
 );
