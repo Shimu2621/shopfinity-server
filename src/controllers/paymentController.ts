@@ -76,60 +76,6 @@ export const createStripeSession = async (req: Request, res: Response) => {
 };
 
 /**
- * ✅ Payment Success
- */
-// export const paymentSuccess = async (req: Request, res: Response) => {
-//   try {
-//     const { id } = req.params;
-
-//     const payment = await PaymentModel.findByIdAndUpdate(
-//       id,
-//       { paymentStatus: "paid" },
-//       { new: true },
-//     );
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Payment successful",
-//       data: payment,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: "Payment success update failed",
-//       error,
-//     });
-//   }
-// };
-
-/**
- * ❌ Payment Cancel
- */
-// export const paymentCancel = async (req: Request, res: Response) => {
-//   try {
-//     const { id } = req.params;
-
-//     const payment = await PaymentModel.findByIdAndUpdate(
-//       id,
-//       { paymentStatus: "cancelled" },
-//       { new: true },
-//     );
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Payment cancelled",
-//       data: payment,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: "Payment cancel failed",
-//       error,
-//     });
-//   }
-// };
-
-/**
  * 📦 Get All Payments (Admin)
  */
 export const getAllPayments = async (_req: Request, res: Response) => {
