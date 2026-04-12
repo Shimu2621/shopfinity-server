@@ -69,7 +69,7 @@ export const createStripeSession = async (req: Request, res: Response) => {
       cancel_url: `http://localhost:3000/payment-cancel?paymentId=${payment._id}`,
     });
 
-    res.status(200).json({ id: session.id });
+    res.status(200).json({ url: session.url });
   } catch (error) {
     res.status(500).json({ message: "Failed to create Stripe session", error });
   }
