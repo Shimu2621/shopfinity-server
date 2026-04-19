@@ -65,8 +65,8 @@ export const createStripeSession = async (req: Request, res: Response) => {
         },
       ],
 
-      success_url: `http://localhost:3000/payment-success?paymentId=${payment._id}`,
-      cancel_url: `http://localhost:3000/payment-cancel?paymentId=${payment._id}`,
+      success_url: `http://localhost:3000/payment/success?paymentId=${payment._id}`,
+      cancel_url: `http://localhost:3000/payment/cancel?paymentId=${payment._id}`,
     });
 
     res.status(200).json({ url: session.url });
