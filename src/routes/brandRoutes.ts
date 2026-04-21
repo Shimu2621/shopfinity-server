@@ -16,10 +16,10 @@ import {
 
 const router = express.Router();
 
-router.post("/", validate(createBrandSchema), createBrand); // ➕ Create
-router.get("/", getAllBrands); // 📜 Get all
-router.get("/:id", validate(getSingleBrandSchema), getSingleBrand); // 🔍 Get single
-router.put("/:id", validate(updateBrandSchema), updateBrand); // ✏️ Update
-router.delete("/:id", validate(deleteBrandSchema), deleteBrand); // ❌ Delete
+router.post("/", validate(createBrandSchema), createBrand); // Create
+router.get("/", getAllBrands); //Get all
+router.get("/:id", validate(getSingleBrandSchema), getSingleBrand); // Get single
+router.put("/:id", validate(updateBrandSchema), updateBrand); //  Update
+router.delete("/:id", validate(deleteBrandSchema), deleteBrand); //  Delete
 
 export default router;
