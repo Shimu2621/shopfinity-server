@@ -99,6 +99,35 @@ export const getAllPayments = async (_req: Request, res: Response) => {
 };
 
 /**
+ * ✏️ Get Single Payment
+ */
+export const getSinglePayment = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const payment = await PaymentModel.findById(id);
+
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: "Payment not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: payment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch payment",
+      error,
+    });
+  }
+};
+
+/**
  * ✏️ Update Payment
  */
 export const updatePayment = async (req: Request, res: Response) => {
