@@ -13,7 +13,7 @@ import { stripeWebhook } from "../controllers/stripeWebhookController";
 const router = express.Router();
 
 router.post("/", createPayment);
-router.get("/", getAllPayments);
+router.get("/payments", getAllPayments);
 router.patch("/:id", updatePayment);
 
 // ✅ Stripe session route
