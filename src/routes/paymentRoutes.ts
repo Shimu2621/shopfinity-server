@@ -6,6 +6,7 @@ import {
   getAllPayments,
   updatePayment,
   createStripeSession,
+  getSinglePayment,
 } from "../controllers/paymentController";
 
 import { stripeWebhook } from "../controllers/stripeWebhookController";
@@ -13,7 +14,8 @@ import { stripeWebhook } from "../controllers/stripeWebhookController";
 const router = express.Router();
 
 router.post("/", createPayment);
-router.get("/payments", getAllPayments);
+router.get("/", getAllPayments);
+router.get("/:id", getSinglePayment);
 router.patch("/:id", updatePayment);
 
 // ✅ Stripe session route
