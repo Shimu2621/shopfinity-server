@@ -76,6 +76,43 @@ export const createStripeSession = async (req: Request, res: Response) => {
 };
 
 /**
+ * 🛒 Create stripeWebhook
+ */
+export const stripeWebhook = async (req: Request, res: Response) => {
+  const sig = req.headers["stripe-signature"] as string;
+
+  let event: Stripe.Event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET!,
+    );
+  } catch (err: any) {
+    console.log("Webhook error:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // IMPORTANT PART
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+
+    const paymentId = session.metadata?.paymentId;
+
+    if (paymentId) {
+      await PaymentModel.findByIdAndUpdate(paymentId, {
+        paymentStatus: "paid",
+      });
+
+      console.log("✅ Payment marked as PAID");
+    }
+  }
+
+  res.json({ received: true });
+};
+
+/**
  * 📦 Get All Payments (Admin)
  */
 export const getAllPayments = async (_req: Request, res: Response) => {
