@@ -3,14 +3,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllUsers = exports.getProfile = exports.updateUser = exports.loginUser = exports.createUser = void 0;
+exports.deleteUser = exports.getAllUsers = exports.getProfile = exports.updateUser = exports.getMe = exports.loginUser = exports.createUser = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const userModel_1 = require("../models/userModel");
 const generateToken_1 = require("../utils/generateToken");
 /*** ✅ Create User (Signup) */
 const createUser = async (req, res) => {
     try {
-        const { name, email, password, avatarUrl, phone, address, role } = req.body;
+        const { name, email, password, role } = req.body;
+        if (!name || !email || !password) {
+            res
+                .status(400)
+                .json({ message: "Name, email and password are required" });
+            return;
+        }
         // Check if user exists
         const existingUser = await userModel_1.User.findOne({ email });
         if (existingUser) {
@@ -18,36 +24,32 @@ const createUser = async (req, res) => {
             return;
         }
         // Hash password
-        const hashedPassword = password
-            ? await bcrypt_1.default.hash(password, 10)
-            : undefined;
+        const hashedPassword = await bcrypt_1.default.hash(password, 10);
         const user = new userModel_1.User({
             name,
             email,
             password: hashedPassword,
-            avatarUrl,
-            phone,
-            address,
-            role: role || "user", // default to user
+            // ✅ Convert role to lowercase if provided
+            role: role ? role.toLowerCase() : "user", // default to user
         });
         await user.save();
         const token = (0, generateToken_1.generateToken)(user._id.toString(), user.role || "user");
         res.status(201).json({
             message: "User created successfully",
-            token,
             user: {
                 id: user._id.toString(),
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                avatarUrl: user.avatarUrl,
-                phone: user.phone,
-                address: user.address,
             },
+            token,
         });
     }
     catch (error) {
-        res.status(500).json({ message: "Error creating user", error });
+        console.error("Signup error:", error);
+        res
+            .status(500)
+            .json({ message: "Error creating user", error: error.message || error });
     }
 };
 exports.createUser = createUser;
@@ -87,6 +89,33 @@ const loginUser = async (req, res) => {
     }
 };
 exports.loginUser = loginUser;
+/*** ✅ GetMe User */
+const getMe = async (req, res) => {
+    try {
+        if (!req.user || !("id" in req.user)) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        const user = await userModel_1.User.findById(req.user.id).select("-password");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({
+            user: {
+                id: user._id.toString(),
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                avatarUrl: user.avatarUrl,
+                phone: user.phone,
+                address: user.address,
+            },
+        });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Failed to fetch user" });
+    }
+};
+exports.getMe = getMe;
 /*** ✅ Update User */
 const updateUser = async (req, res) => {
     try {
@@ -166,4 +195,19 @@ const getAllUsers = async (_req, res) => {
     }
 };
 exports.getAllUsers = getAllUsers;
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await userModel_1.User.findByIdAndDelete(id);
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+        res.status(200).json({ message: "User deleted successfully" });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error deleting user", error });
+    }
+};
+exports.deleteUser = deleteUser;
 //# sourceMappingURL=userController.js.map
