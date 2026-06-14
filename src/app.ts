@@ -41,4 +41,11 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Shopfinity Server with TypeScript and MongoDB!");
 });
 
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is running",
+  });
+});
+
 export default app;
