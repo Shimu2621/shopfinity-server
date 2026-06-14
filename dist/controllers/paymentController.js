@@ -6,6 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updatePayment = exports.getSinglePayment = exports.getAllPayments = exports.stripeWebhook = exports.createStripeSession = exports.createPayment = void 0;
 const paymentModel_1 = require("../models/paymentModel");
 const stripe_1 = __importDefault(require("stripe"));
+if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is missing");
+}
 const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
 /**
  * ➕ Create Payment
