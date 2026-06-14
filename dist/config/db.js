@@ -8,10 +8,6 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const MONGO_URI = process.env.MONGO_URI;
-if (!MONGO_URI) {
-    console.error("❌ MONGO_URI is missing in .env file");
-    process.exit(1);
-}
 const connectDB = async () => {
     try {
         await mongoose_1.default.connect(MONGO_URI);
@@ -19,7 +15,7 @@ const connectDB = async () => {
     }
     catch (error) {
         console.error("❌ MongoDB Connection Failed:", error.message);
-        process.exit(1);
+        throw error;
     }
 };
 exports.connectDB = connectDB;
