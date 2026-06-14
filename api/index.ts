@@ -12,15 +12,8 @@ export const handler = async (req: any, res: any) => {
       await connectDB();
       isConnected = true;
     }
-    return serverlessHandler(req, res);
   } catch (err) {
-    console.error("Handler error:", err);
-    res.statusCode = 500;
-    res.end(
-      JSON.stringify({
-        error: "Internal server error",
-        details: (err as Error).message,
-      }),
-    );
+    console.error("DB connection error:", err);
   }
+  return serverlessHandler(req, res);
 };

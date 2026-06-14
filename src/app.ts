@@ -37,8 +37,6 @@ app.use("/api/filter-option", filterOptionRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/admin/dashboard", dashboardRoutes);
 
-app.use(errorHandler);
-
 // Welcome Route
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Shopfinity Server with TypeScript and MongoDB!");
@@ -50,5 +48,7 @@ app.get("/health", (req: Request, res: Response) => {
     message: "Server is running",
   });
 });
+
+app.use(errorHandler);
 
 export default app;
