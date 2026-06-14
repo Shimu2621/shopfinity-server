@@ -14,6 +14,7 @@ import paymentRoutes from "./routes/paymentRoutes";
 import filterOptionRoutes from "./routes/filterOptionRoutes";
 import wishlistRoutes from "./routes/wishlistRoutes";
 import dashboardRoutes from "./routes/dashboardRoutes";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
@@ -35,6 +36,8 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/filter-option", filterOptionRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/admin/dashboard", dashboardRoutes);
+
+app.use(errorHandler);
 
 // Welcome Route
 app.get("/", (req: Request, res: Response) => {
