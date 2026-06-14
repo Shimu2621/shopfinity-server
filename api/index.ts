@@ -6,7 +6,7 @@ let isConnected = false;
 
 const serverlessHandler = serverless(app);
 
-export const handler = async (req: any, res: any) => {
+const handler = async (req: any, res: any) => {
   try {
     if (!isConnected) {
       await connectDB();
@@ -17,3 +17,5 @@ export const handler = async (req: any, res: any) => {
   }
   return serverlessHandler(req, res);
 };
+
+export default handler;
