@@ -1,6 +1,15 @@
 import serverless from "serverless-http";
 import app from "../src/app";
+import { connectDB } from "../src/config/db";
 
-const handler = serverless(app);
+let isConnected = false;
 
-export default handler;
+const serverlessHandler = serverless(app);
+
+export const handler = async (req: any, res: any) => {
+  if (!isConnected) {
+    await connectDB();
+    isConnected = true;
+  }
+  return serverlessHandler(req, res);
+};
