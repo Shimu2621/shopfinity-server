@@ -15,6 +15,7 @@ import filterOptionRoutes from "./routes/filterOptionRoutes";
 import wishlistRoutes from "./routes/wishlistRoutes";
 import dashboardRoutes from "./routes/dashboardRoutes";
 import { errorHandler } from "./middleware/errorHandler";
+import { ProductModel } from "./models/productModel";
 
 const app = express();
 
@@ -47,6 +48,15 @@ app.get("/health", (req: Request, res: Response) => {
     success: true,
     message: "Server is running",
   });
+});
+
+app.get("/test-db", async (req, res) => {
+  try {
+    const count = await ProductModel.countDocuments();
+    res.json({ success: true, count });
+  } catch (err) {
+    res.status(500).json({ success: false, message: (err as Error).message });
+  }
 });
 
 app.use(errorHandler);
