@@ -88,6 +88,7 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
   }
 };
 
+// Delete Order Controller
 export const deleteOrder = async (req: Request, res: Response) => {
   try {
     const order = await OrderModel.findByIdAndDelete(req.params.id);
