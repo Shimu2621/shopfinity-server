@@ -36,7 +36,7 @@ export const getAllProductQuestions = async (req: Request, res: Response) => {
       .populate("userId", "name email")
       .populate("productId", "name price")
       .populate({
-        path: "answer", // make sure you have virtual or ref
+        path: "answer",
         model: "ProductAnswer",
       })
       .sort({ createdAt: -1 });
