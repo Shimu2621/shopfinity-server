@@ -27,6 +27,7 @@ export const getAllOrders = async (req: Request, res: Response) => {
   }
 };
 
+// Get Order By ID Controller
 export const getOrderById = async (req: Request, res: Response) => {
   try {
     const order = await OrderModel.findById(req.params.id).populate(
