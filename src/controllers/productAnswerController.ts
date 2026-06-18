@@ -28,7 +28,7 @@ export const createProductAnswer = async (req: Request, res: Response) => {
 
 /**
  * ✅ Get All Answers for a Question
- * GET /api/product-answers/question/:questionId
+ *
  */
 export const getAnswersByQuestion = async (req: Request, res: Response) => {
   try {
@@ -69,7 +69,7 @@ export const updateProductAnswer = async (req: Request, res: Response) => {
     const updated = await ProductAnswerModel.findByIdAndUpdate(
       req.params.id,
       { answer },
-      { new: true }
+      { new: true },
     );
 
     if (!updated) {
