@@ -60,6 +60,7 @@ export const getMyOrders = async (req: AuthRequest, res: Response) => {
   }
 };
 
+// Update Order Status Controller
 export const updateOrderStatus = async (req: Request, res: Response) => {
   try {
     const { status } = req.body;
