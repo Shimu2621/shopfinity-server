@@ -18,7 +18,7 @@ export const createProduct = async (req: Request, res: Response) => {
 // ✅ Get All Products (with pagination)
 export const getAllProducts = async (
   req: Request<{}, {}, {}, IProductQuery>,
-  res: Response
+  res: Response,
 ) => {
   try {
     const {
@@ -39,7 +39,7 @@ export const getAllProducts = async (
     const limitNumber = Number(limit);
     const skip = (pageNumber - 1) * limitNumber;
 
-    // ✅ Total count (IMPORTANT)
+    // ✅ Total count
     const total = await ProductModel.countDocuments(filter);
 
     // ✅ Paginated products
@@ -58,7 +58,7 @@ export const getAllProducts = async (
         delete obj.categoryId;
         delete obj.brandId;
         return obj;
-      }
+      },
     );
 
     res.status(200).json({
@@ -79,7 +79,7 @@ export const getAllProducts = async (
 // ✅ Get Featured Products (1 per Category)
 export const getFeaturedCategoryProducts = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     const products = await ProductModel.aggregate([
@@ -150,7 +150,7 @@ export const updateProduct = async (req: Request, res: Response) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
     if (!product) {
       return res
