@@ -14,6 +14,7 @@ export const createOrder = async (req: Request, res: Response) => {
   }
 };
 
+// Get All Orders Controller
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
     const orders = await OrderModel.find()
