@@ -3,6 +3,7 @@ import { OrderModel } from "../models/orderModel";
 import { orderSchema } from "../validations/order.validation";
 import { AuthRequest } from "../middleware/authMiddleware";
 
+// Create Order Controller
 export const createOrder = async (req: Request, res: Response) => {
   try {
     const validatedData = orderSchema.parse(req.body);
@@ -29,7 +30,7 @@ export const getOrderById = async (req: Request, res: Response) => {
   try {
     const order = await OrderModel.findById(req.params.id).populate(
       "items.productId",
-      "name images price description"
+      "name images price description",
     ); // ✅ populate
 
     if (!order) return res.status(404).json({ message: "Order not found" });
@@ -73,7 +74,7 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     const order = await OrderModel.findByIdAndUpdate(
       req.params.id,
       { status },
-      { new: true }
+      { new: true },
     );
 
     if (!order) return res.status(404).json({ message: "Order not found" });
