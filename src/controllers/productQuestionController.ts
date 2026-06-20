@@ -28,7 +28,7 @@ export const createProductQuestion = async (req: Request, res: Response) => {
 
 /**
  * ✅ Get All Product Questions
- * GET /api/product-questions
+ *
  */
 export const getAllProductQuestions = async (req: Request, res: Response) => {
   try {
