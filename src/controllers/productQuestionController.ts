@@ -56,7 +56,7 @@ export const getAllProductQuestions = async (req: Request, res: Response) => {
 
 /**
  * ✅ Get Single Product Question
- * GET /api/product-questions/:id
+ *
  */
 export const getSingleProductQuestion = async (req: Request, res: Response) => {
   try {
