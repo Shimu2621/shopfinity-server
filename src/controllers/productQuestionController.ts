@@ -4,7 +4,7 @@ import { productQuestionSchema } from "../validations/productQuestion.validation
 
 /**
  * ✅ Create Product Question
- * POST /api/product-questions
+ *
  */
 export const createProductQuestion = async (req: Request, res: Response) => {
   try {
