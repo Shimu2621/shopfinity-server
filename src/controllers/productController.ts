@@ -44,7 +44,7 @@ export const getAllProducts = async (
     // ✅ Total count
     const total = await ProductModel.countDocuments(filter);
 
-    // console.log("STEP 2");
+    console.log("STEP 2");
 
     // ✅ Paginated products
     const products = await ProductModel.find(filter)
