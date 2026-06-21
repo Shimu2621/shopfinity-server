@@ -39,8 +39,12 @@ export const getAllProducts = async (
     const limitNumber = Number(limit);
     const skip = (pageNumber - 1) * limitNumber;
 
+    console.log("STEP 1");
+
     // ✅ Total count
     const total = await ProductModel.countDocuments(filter);
+
+    // console.log("STEP 2");
 
     // ✅ Paginated products
     const products = await ProductModel.find(filter)
@@ -48,6 +52,8 @@ export const getAllProducts = async (
       .populate("brandId", "name")
       .limit(limitNumber)
       .skip(skip);
+
+    // console.log("STEP 3");
 
     // ✅ Map categoryId and brandId to category and brand in plain JS objects
     const mappedProducts = (products as IProductWithCategoryBrand[]).map(
