@@ -53,7 +53,7 @@ export const getAllProducts = async (
       .limit(limitNumber)
       .skip(skip);
 
-    // console.log("STEP 3");
+    console.log("STEP 3");
 
     // ✅ Map categoryId and brandId to category and brand in plain JS objects
     const mappedProducts = (products as IProductWithCategoryBrand[]).map(
