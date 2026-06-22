@@ -24,6 +24,6 @@ import serverless from "serverless-http";
 import app from "../src/app";
 import { connectDB } from "../src/config/db";
 
-connectDB(); // 👈 ONLY ONCE (GLOBAL SCOPE)
+connectDB();
 
 export default serverless(app);
