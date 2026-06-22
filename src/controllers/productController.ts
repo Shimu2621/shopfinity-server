@@ -16,71 +16,71 @@ export const createProduct = async (req: Request, res: Response) => {
 };
 
 // ✅ Get All Products (with pagination)
-export const getAllProducts = async (
-  req: Request<{}, {}, {}, IProductQuery>,
-  res: Response,
-) => {
-  try {
-    const {
-      featured,
-      categoryId,
-      brandId,
-      page = "1",
-      limit = "10",
-    } = req.query;
+// export const getAllProducts = async (
+//   req: Request<{}, {}, {}, IProductQuery>,
+//   res: Response,
+// ) => {
+//   try {
+//     const {
+//       featured,
+//       categoryId,
+//       brandId,
+//       page = "1",
+//       limit = "10",
+//     } = req.query;
 
-    const filter: any = {};
+//     const filter: any = {};
 
-    if (featured === "true") filter.featured = true;
-    if (categoryId) filter.categoryId = categoryId;
-    if (brandId) filter.brandId = brandId;
+//     if (featured === "true") filter.featured = true;
+//     if (categoryId) filter.categoryId = categoryId;
+//     if (brandId) filter.brandId = brandId;
 
-    const pageNumber = Number(page);
-    const limitNumber = Number(limit);
-    const skip = (pageNumber - 1) * limitNumber;
+//     const pageNumber = Number(page);
+//     const limitNumber = Number(limit);
+//     const skip = (pageNumber - 1) * limitNumber;
 
-    console.log("STEP 1");
+//     console.log("STEP 1");
 
-    // ✅ Total count
-    const total = await ProductModel.countDocuments(filter);
+//     // ✅ Total count
+//     const total = await ProductModel.countDocuments(filter);
 
-    console.log("STEP 2");
+//     console.log("STEP 2");
 
-    // ✅ Paginated products
-    const products = await ProductModel.find(filter)
-      .populate("categoryId", "name slug icon description parentId")
-      .populate("brandId", "name")
-      .limit(limitNumber)
-      .skip(skip);
+//     // ✅ Paginated products
+//     const products = await ProductModel.find(filter)
+//       .populate("categoryId", "name slug icon description parentId")
+//       .populate("brandId", "name")
+//       .limit(limitNumber)
+//       .skip(skip);
 
-    console.log("STEP 3");
+//     console.log("STEP 3");
 
-    // ✅ Map categoryId and brandId to category and brand in plain JS objects
-    const mappedProducts = (products as IProductWithCategoryBrand[]).map(
-      (p) => {
-        const obj = p.toObject();
-        obj.category = obj.categoryId;
-        obj.brand = obj.brandId;
-        delete obj.categoryId;
-        delete obj.brandId;
-        return obj;
-      },
-    );
+//     // ✅ Map categoryId and brandId to category and brand in plain JS objects
+//     const mappedProducts = (products as IProductWithCategoryBrand[]).map(
+//       (p) => {
+//         const obj = p.toObject();
+//         obj.category = obj.categoryId;
+//         obj.brand = obj.brandId;
+//         delete obj.categoryId;
+//         delete obj.brandId;
+//         return obj;
+//       },
+//     );
 
-    res.status(200).json({
-      success: true,
-      products: mappedProducts,
-      total,
-      page: pageNumber,
-      limit: limitNumber,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: (error as Error).message,
-    });
-  }
-};
+//     res.status(200).json({
+//       success: true,
+//       products: mappedProducts,
+//       total,
+//       page: pageNumber,
+//       limit: limitNumber,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: (error as Error).message,
+//     });
+//   }
+// };
 
 // ✅ Get Featured Products (1 per Category)
 export const getFeaturedCategoryProducts = async (
