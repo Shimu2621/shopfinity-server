@@ -20,6 +20,9 @@ import { ProductModel } from "./models/productModel";
 const app = express();
 
 app.use(cors());
+
+app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
+
 app.use(express.json());
 
 //Routes
@@ -37,8 +40,6 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/filter-option", filterOptionRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/admin/dashboard", dashboardRoutes);
-
-app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
 
 // Welcome Route
 app.get("/", (req: Request, res: Response) => {
