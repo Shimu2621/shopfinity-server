@@ -82,6 +82,24 @@ export const createProduct = async (req: Request, res: Response) => {
 //   }
 // };
 
+export const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    console.log("START");
+
+    return res.status(200).json({
+      success: true,
+      message: "Controller reached",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 // ✅ Get Featured Products (1 per Category)
 export const getFeaturedCategoryProducts = async (
   req: Request,
