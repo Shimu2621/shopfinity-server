@@ -19,3 +19,11 @@
 // };
 
 // export default handler;
+
+import serverless from "serverless-http";
+import app from "../src/app";
+import { connectDB } from "../src/config/db";
+
+connectDB(); // 👈 ONLY ONCE (GLOBAL SCOPE)
+
+export default serverless(app);
