@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import { PaymentModel } from "../models/paymentModel";
 import Stripe from "stripe";
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is missing");
-}
+// if (!process.env.STRIPE_SECRET_KEY) {
+//   throw new Error("STRIPE_SECRET_KEY is missing");
+// }
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 /**
