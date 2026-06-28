@@ -5,14 +5,16 @@ dotenv.config();
 
 const MONGO_URI = process.env.MONGO_URI as string;
 
-export const connectDB = async (): Promise<void> => {
+export const connectDB = async () => {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
   try {
-    await mongoose.connect(MONGO_URI, {
-      serverSelectionTimeoutMS: 5000,
-    });
+    await mongoose.connect(MONGO_URI);
     console.log("✅ MongoDB Connected Successfully");
   } catch (error) {
-    console.error("❌ MongoDB Connection Failed:", (error as Error).message);
+    console.error("❌ MongoDB Connection Failed:", error);
     throw error;
   }
 };
