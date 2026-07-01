@@ -53,10 +53,7 @@ export const getSingleReview = async (req: Request, res: Response) => {
   try {
     const review = await Review.findById(req.params.id);
 
-    if (!review)
-      return res
-        .status(404)
-        .json({ success: false, message: "Review not found" });
+    if (!review) return res.status(404).json({});
 
     res.status(200).json({ success: true, data: review });
   } catch (error: any) {
