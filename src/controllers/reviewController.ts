@@ -68,7 +68,7 @@ export const getSingleReview = async (req: Request, res: Response) => {
 export const updateReview = async (req: Request, res: Response) => {
   try {
     const updated = await Review.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+    
     });
 
     if (!updated)
