@@ -97,6 +97,7 @@ export const deleteReview = async (req: Request, res: Response) => {
         .json({ success: false, message: "Review not found" });
 
     res.status(200).json({
+      success: true,
       message: "Review deleted successfully",
     });
   } catch (error: any) {
